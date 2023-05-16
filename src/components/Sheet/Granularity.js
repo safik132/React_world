@@ -28,7 +28,7 @@ const Granularity = (props) => {
             <FaTrash
               onClick={props.deleteValues}
               id="groupby"
-              style={{ cursor: "pointer", height: "12px", marginTop: "2px" }}
+              style={{ cursor: "pointer", height: "14px", marginTop: "2px" }}
             />
           </p>
         </div>
@@ -37,8 +37,8 @@ const Granularity = (props) => {
             src="../images/detail.png"
             style={{
               display: "block",
-              width: "40px",
-              marginLeft: "20px",
+              width: "25px",
+              marginLeft: "50px",
               borderRadius: "20px",
               alignContent: "center",
               justifyContent: "center",
@@ -55,7 +55,7 @@ const Granularity = (props) => {
             <FaTrash
               onClick={props.deleteValues}
               id="text"
-              style={{ cursor: "pointer", height: "12px", marginTop: "2px" }}
+              style={{ cursor: "pointer", height: "14px", marginTop: "2px" }}
             />
           </p>
         </div>

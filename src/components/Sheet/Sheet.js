@@ -16,6 +16,8 @@ import { logoutUser } from "../actions/authActions";
 import jwt_decode from "jwt-decode";
 import setAuthToken from "../../utils/setAuthToken";
 import Header2 from "../Headers/Header2";
+import axios from "axios";
+import Crosstable from "./Crosstable";
 
 const Sheet = () => {
   const [sheetParams, setSheetParam] = useState();
@@ -23,6 +25,8 @@ const Sheet = () => {
   const [locationData, setLocationData] = useState([]);
   // const [lon, setLon] = useState();
   // const [lat, setLat] = useState();
+  const [sortedData, setSortedData] = useState({ x: [], y: [] });
+  const [tableData, setTableData] = useState(null);
 
   const {
     setMatchUser,
@@ -143,6 +147,29 @@ const Sheet = () => {
       setSheets(tempSheets);
     }
   };
+  function parseWithNaN(jsonString) {
+    return JSON.parse(jsonString.replace(/NaN/g, "null"));
+  }
+
+  // ========================  table calculation API  ============================
+
+  axios
+    .post("http://127.0.0.1:8000/api/table", {
+      col: selectedSheet?.col?.key,
+      row: selectedSheet?.row?.key,
+      text: selectedSheet?.text?.key,
+    })
+    .then((res) => {
+      const data = parseWithNaN(res.data);
+      setTableData(data);
+      console.log("Parsed data:", data);
+      console.log(res.data);
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+
+  // =============================================================================
 
   useEffect(() => {
     setSelectedSheet(sheets.find((s) => s.name === sheetParam));
@@ -170,6 +197,25 @@ const Sheet = () => {
         : s
     );
     setSheets(tempSheets);
+    if (e.target.value === "null") {
+      setSortedData({ x: [], y: [] });
+    } else {
+      axios
+        .post("http://127.0.0.1:8000/api/sort", {
+          action: e.target.value,
+          col: selectedSheet?.col?.key,
+          row: selectedSheet?.row?.key,
+        })
+
+        .then((res) => {
+          setSortedData({ x: res.data.column, y: res.data.rows });
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
+
+    // test sort api here =================================
     if (e.target.value === "ascending") {
       setSortType("ascending");
       setSort("sort");
@@ -198,6 +244,11 @@ const Sheet = () => {
       window.location.href = "/";
     }
   }
+  const getCurrentGraphType = () => {
+    const sheet = sheets.find((s) => s.name === sheetParam);
+    return sheet ? sheet.graph : null;
+  };
+
   return (
     <>
       <Header />
@@ -315,6 +366,7 @@ const Sheet = () => {
             <option value="scattermapbox">Map</option>
             <option value="scattergeo">Geo Map</option>
             <option value="table">Table</option>
+            <option value="Crosstab">Cross tab</option>
             <option value="treemap">Tree</option>
           </select>
           <input
@@ -347,7 +399,22 @@ const Sheet = () => {
             {/* <ReactWordcloud words={words} /> */}
           </div>
           <div id="plots">
-            {selectedSheet?.graph && (
+            {tableData &&
+              tableData.headings &&
+              tableData.side_headings &&
+              tableData.text_values &&
+              getCurrentGraphType() === "Crosstab" && (
+                <Crosstable
+                  headings={tableData.headings}
+                  sideHeadings={tableData.side_headings}
+                  textValues={tableData.text_values.map((row) =>
+                    row.map((value) =>
+                      value === null ? "-" : value.toFixed(2)
+                    )
+                  )}
+                />
+              )}
+            {selectedSheet?.graph && getCurrentGraphType() !== "Crosstab" && (
               <Plot
                 data={[
                   selectedSheet.graph === "pie"
@@ -516,6 +583,45 @@ const Sheet = () => {
                         type: "treemap",
                         labels: selectedSheet?.row?.values,
                         parents: selectedSheet?.col?.values,
+                      }
+                    : selectedSheet.graph === "bar"
+                    ? {
+                        type: selectedSheet?.graph,
+                        x:
+                          sortedData.x.length > 0
+                            ? sortedData.x
+                            : selectedSheet?.col?.values,
+                        y:
+                          sortedData.y.length > 0
+                            ? sortedData.y
+                            : selectedSheet?.row?.values,
+                        barmode: "stack",
+                        name: selectedSheet?.col?.key,
+                        // text: selectedSheet?.col?.values,
+                        transforms: [
+                          {
+                            type: "aggregate",
+                            aggregations: [
+                              {
+                                target: "y",
+                                func: "sum",
+                                enabled: true,
+                              },
+                            ],
+                          },
+
+                          {
+                            type: filterType,
+                            target: "y",
+                            operation: filterOperator,
+                            value: filterValue,
+                          },
+                          {},
+                          {
+                            type: "groupby",
+                            groups: selectedSheet?.groupby?.values,
+                          },
+                        ],
                       }
                     : {
                         type: selectedSheet?.graph,

@@ -165,9 +165,9 @@ option {
 .HeaderLink {
   color: white;
 }
-.HeaderLink:hover {
+/* .HeaderLink:hover {
   color: black;
-}
+} */
 .HeaderBtn {
   margin: 5px;
   padding: 3px;
@@ -389,10 +389,16 @@ tr {
   border: 1px solid black;
   font-size: 15px;
   align-items: center;
+  margin: 5px;
+  height: 60px;
+  padding: 8px;
+  /* border-radius: 10px; */
 }
 .granularity-color p {
   border: 1px solid black;
-  border-radius: 5px;
+  color: black;
+  border-radius: 2px;
+  height: 24px;
 }
 .br {
   display: block;
@@ -684,7 +690,7 @@ tr {
   width: 70%;
   background-color: #c0c6cc;
   margin-top: 20px;
-  height: 75vh;
+  height: 77vh;
   padding: 10px;
 }
 .ML_Form_label {

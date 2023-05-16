@@ -6,6 +6,7 @@ import { GlobalContext } from "../../GlobalProvider";
 import "../../App.css";
 import { useParams } from "react-router-dom";
 import Scrollbars from "react-custom-scrollbars-2";
+import axios from "axios";
 
 function getDataRange(data) {
   const dataWithValues = pickBy(data, (value, key) => !!value.v);
@@ -160,10 +161,31 @@ const ImportExcel = (props) => {
     setSelectedWB(jsondata.allSheetsData);
     setAddedFile(true);
   };
+  const sendFileToBackend = (file) => {
+    const formData = new FormData();
+    formData.append('file', file);
+    
+
+    axios
+      .post('http://127.0.0.1:8000/api/uploadfile', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      })
+      .then((res) => {
+       // console.log('File uploaded successfully:', res.data);
+       console.log(file)
+      })
+      .catch((err) => {
+        console.error('Error uploading file:', err);
+        console.log(file)
+      });
+  };
   const handleUploadFile = async (e) => {
     const myFile = e.target.files[0];
     var idx = myFile.name.lastIndexOf(".");
     var filetype = idx < 1 ? "" : myFile.name.substr(idx + 1);
+    sendFileToBackend(myFile);
     if (filetype === "owbx") {
       const reader = new FileReader();
       reader.onload = (event) => {
