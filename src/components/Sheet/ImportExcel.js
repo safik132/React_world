@@ -163,22 +163,25 @@ const ImportExcel = (props) => {
   };
   const sendFileToBackend = (file) => {
     const formData = new FormData();
-    formData.append('file', file);
-    
+    formData.append("file", file);
 
     axios
-      .post('http://127.0.0.1:8000/api/uploadfile', formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      })
+      .post(
+        "https://python-api-productionserver.onrender.com/api/uploadfile",
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      )
       .then((res) => {
-       // console.log('File uploaded successfully:', res.data);
-       console.log(file)
+        // console.log('File uploaded successfully:', res.data);
+        console.log(file);
       })
       .catch((err) => {
-        console.error('Error uploading file:', err);
-        console.log(file)
+        console.error("Error uploading file:", err);
+        console.log(file);
       });
   };
   const handleUploadFile = async (e) => {
