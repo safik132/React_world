@@ -27,10 +27,8 @@ const MLForm = () => {
     Tot_cost: "",
     Payment_Typology: "",
   });
-  console.log(formData);
   const handleChange = (e) => {
     let { id, value } = e.target;
-    console.log(value);
     if (e.target.type === "number") {
       value = parseFloat(e.target.value);
     }
@@ -55,30 +53,29 @@ const MLForm = () => {
       Payment_Typology: formData.Payment_Typology,
     };
     // console.log(newData);
-    postFormData(newData);
+    // postFormData(newData);
     axios
-      .post("http://localhost:8000/ml/data/", newData)
-      .then((res) => setResponse(res));
+      .post(
+        "https://python-api-productionserver.onrender.com/ml/data/",
+        newData
+      )
+      .then((res) => {
+        if (res.data === 1) {
+          setTerm("Genuine");
+        } else {
+          setTerm("Fake");
+        }
+      });
     openModal();
   };
   const openModal = (e) => {
     const x = document.getElementById("outputbox");
     setIsOpen(true);
-    console.log(response.data);
-    if (response.data === 1) {
-      console.log("genuine");
-      // x.style.background = "Green";
-      setTerm("Genuine");
-      console.log(term);
-    }
-    if (response.data === 0) {
-      console.log("fraud");
-      setTerm("Fraud");
-    }
   };
   function closeModal() {
     setIsOpen(false);
   }
+  console.log(term);
   return (
     <>
       <form className="ML_Form">

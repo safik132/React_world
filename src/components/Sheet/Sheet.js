@@ -154,7 +154,7 @@ const Sheet = () => {
   // ========================  table calculation API  ============================
 
   axios
-    .post("http://127.0.0.1:8000/api/table", {
+    .post("https://python-api-productionserver.onrender.com/api/table", {
       col: selectedSheet?.col?.key,
       row: selectedSheet?.row?.key,
       text: selectedSheet?.text?.key,
@@ -201,7 +201,7 @@ const Sheet = () => {
       setSortedData({ x: [], y: [] });
     } else {
       axios
-        .post("http://127.0.0.1:8000/api/sort", {
+        .post("https://python-api-productionserver.onrender.com/api/sort", {
           action: e.target.value,
           col: selectedSheet?.col?.key,
           row: selectedSheet?.row?.key,
@@ -248,7 +248,6 @@ const Sheet = () => {
     const sheet = sheets.find((s) => s.name === sheetParam);
     return sheet ? sheet.graph : null;
   };
-
   return (
     <>
       <Header />
