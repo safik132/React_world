@@ -9,11 +9,11 @@ import Sheet from "../Sheet/Sheet";
 export const registerUser = (userData, history) => {
   console.log("yes", history);
   axios
-    .post("http://localhost:5001/api/users/register", userData)
-    // .post(
-    //   "https://ocean-user-serverbackend.onrender.com/api/users/login",
-    //   userData
-    // )
+    // .post("http://localhost:5001/api/users/register", userData)
+    .post(
+      "https://ocean-user-serverbackend.onrender.com/api/users/login",
+      userData
+    )
     .then((res) => alert("Registered Successfull pls Login"))
     .catch((err) => console.log(err));
 };
