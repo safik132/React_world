@@ -19,14 +19,14 @@ const Home = () => {
       <div className="home-page">
         <div className="leftSide">
           <h1 className="h1">Project Ocean </h1>
-          <a href="https://www.aces-co.com/" rel="noreferrer" target="_blank">
+          {/* <a href="https://www.aces-co.com/" rel="noreferrer" target="_blank">
             <img
               className="logo"
               style={{ color: "white" }}
               src="../images/Aces.png"
               alt="logo-img"
             />
-          </a>
+          </a> */}
         </div>
         <div className="rightSide">
           {/* <Login /> */}

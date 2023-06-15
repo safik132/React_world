@@ -18,6 +18,9 @@ import setAuthToken from "../../utils/setAuthToken";
 import Header2 from "../Headers/Header2";
 import axios from "axios";
 import Crosstable from "./Crosstable";
+import Test from "./Test";
+import ClipLoader from "react-spinners/ClipLoader";
+import Bufferingwindow from "./Bufferingwindow";
 
 const Sheet = () => {
   const [sheetParams, setSheetParam] = useState();
@@ -29,6 +32,10 @@ const Sheet = () => {
   const [tableData, setTableData] = useState(null);
 
   const {
+    loading,
+    setLoading,
+    color,
+    setColor,
     setMatchUser,
     columns,
     sheets,
@@ -48,6 +55,8 @@ const Sheet = () => {
     setSort,
     showMenu,
     setLoginUsername,
+    fileName,
+    setFileName,
   } = useContext(GlobalContext);
   const dragItem = useRef();
   const sheetParam = useParams().sheet;
@@ -152,23 +161,30 @@ const Sheet = () => {
   }
 
   // ========================  table calculation API  ============================
-
-  axios
-    .post("https://python-api-productionserver.onrender.com/api/table", {
-      col: selectedSheet?.col?.key,
-      row: selectedSheet?.row?.key,
-      text: selectedSheet?.text?.key,
-    })
-    .then((res) => {
-      const data = parseWithNaN(res.data);
-      setTableData(data);
-      console.log("Parsed data:", data);
-      console.log(res.data);
-    })
-    .catch((err) => {
-      console.log(err);
-    });
-
+  const fetchTableData = () => {
+    if (selectedSheet?.graph === "Crosstab") {
+      axios
+        .post("https://python-api-productionserver.onrender.com/api/table", {
+          col: selectedSheet?.col?.key,
+          row: selectedSheet?.row?.key,
+          text: selectedSheet?.text?.key,
+        })
+        .then((res) => {
+          const data = parseWithNaN(res.data);
+          setTableData(data);
+          console.log("Parsed data:", data);
+          console.log(res.data);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    } else {
+      setTableData(null); // Reset the table data
+    }
+  };
+  useEffect(() => {
+    fetchTableData();
+  }, [selectedSheet]);
   // =============================================================================
 
   useEffect(() => {
@@ -185,7 +201,6 @@ const Sheet = () => {
     //   // setSelectedWBSheet(null);
     // }
   }, [sheets, sheetParam, setSelectedSheet, setSelectedWB, setSelectedWBSheet]);
-
   //Sorting Fucntions <>
   function handleSorting(e) {
     const tempSheets = sheets.map((s) =>
@@ -248,6 +263,15 @@ const Sheet = () => {
     const sheet = sheets.find((s) => s.name === sheetParam);
     return sheet ? sheet.graph : null;
   };
+  const handleChat = () => {
+    var x = document.getElementById("chatBox");
+    if (x.style.display === "none") {
+      x.style.display = "flex";
+    } else {
+      x.style.display = "none";
+    }
+  };
+
   return (
     <>
       <Header />
@@ -256,26 +280,30 @@ const Sheet = () => {
       <div className="third-line">
         <div className="field">
           <ImportExcel />
-          {!isEmpty(selectedWB) && (
-            <div className="fileName" style={{ display: "block" }}>
-              {Object.keys(selectedWB).map((sheet, idx) => (
-                <div key={idx}>
-                  <input
-                    type="checkBox"
-                    checked={sheet === selectedWBSheet}
-                    name="sheetName"
-                    value={sheet}
-                    onChange={handleSheetChange}
-                  ></input>
-                  <span
-                    draggable
-                    onDragStart={() => (dragItem.current = sheet)}
-                  >
-                    {sheet}
-                  </span>
-                </div>
-              ))}
-            </div>
+          {loading ? (
+            <Bufferingwindow />
+          ) : (
+            !isEmpty(selectedWB) && (
+              <div className="fileName" style={{ display: "block" }}>
+                {Object.keys(selectedWB).map((sheet, idx) => (
+                  <div key={idx}>
+                    <input
+                      type="checkBox"
+                      checked={sheet === selectedWBSheet}
+                      name="sheetName"
+                      value={sheet}
+                      onChange={handleSheetChange}
+                    ></input>
+                    <span
+                      draggable
+                      onDragStart={() => (dragItem.current = sheet)}
+                    >
+                      {sheet}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            )
           )}
           <Scrollbars style={{ height: "300px" }}>
             <div
@@ -749,13 +777,39 @@ const Sheet = () => {
       </div>
       {/* Renaming sheet Box */}
       <Menu showMenu={showMenu} />
+      {/* <button
+        className="HeaderBtn"
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          marginLeft: "1280px",
+          border: "100%",
+          borderRadius: "100%",
+          width: "100px",
+          height: "100px",
+          marginTop: "-92px",
+          fontSize: "25px",
+        }}
+        onClick={handleChat}
+      >
+        Chat
+      </button> */}
+      <div
+        id="chatBox"
+        style={{
+          display: "none",
+          alignContent: "flex-end",
+          marginLeft: "1220px",
+          marginTop: "-68vh",
+        }}
+      >
+        <Test processCsv={processCsv} handleDrop={handleDrop} />
+      </div>
+
       <Footer />
     </>
   );
 };
-// Sheet.propTypes = {
-//   logoutUser: PropTypes.func.isRequired,
-//   auth: PropTypes.object.isRequired,
-// };
 
 export default Sheet;

@@ -12,8 +12,15 @@ import Sheet from "../Sheet/Sheet";
 import axios from "axios";
 
 const Login = (props) => {
-  const { form, setForm, Luser, setLUser, setUserData, error, setError } =
-    useContext(GlobalContext);
+  const {
+    form,
+    setForm,
+    Luser,
+    setLUser,
+    setUserData,
+    error,
+    setError,
+  } = useContext(GlobalContext);
   let navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -38,16 +45,17 @@ const Login = (props) => {
       setError("Please enter Password");
     } else {
       axios
-        .post(
-          "https://ocean-user-serverbackend.onrender.com/api/users/login",
-          userData
-        )
+        .post("http://localhost:5001/api/users/login", userData)
+        // .post("http://18.117.87.102:5001/api/users/login", userData)
+
         .then((res) => {
+          console.log("working");
           const { token } = res.data;
           localStorage.setItem("jwtToken", token);
           navigate("/sheet/sheet");
         })
         .catch((err) => {
+          console.log(err);
           alert("Email or password invalid");
         });
     }

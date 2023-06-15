@@ -52,20 +52,22 @@ const MLForm = () => {
       Tot_cost: formData.Tot_cost,
       Payment_Typology: formData.Payment_Typology,
     };
-    // console.log(newData);
+    console.log(newData);
     // postFormData(newData);
     axios
       .post(
         "https://python-api-productionserver.onrender.com/ml/data/",
         newData
       )
+      // .post("http://localhost:8000/ml/data/", newData)
       .then((res) => {
         if (res.data === 1) {
           setTerm("Genuine");
         } else {
           setTerm("Fake");
         }
-      });
+      })
+      .catch((err) => console.log(err));
     openModal();
   };
   const openModal = (e) => {

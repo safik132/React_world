@@ -8,14 +8,12 @@ import Story from "./components/Story/Story";
 import "./App.css";
 import AnalyticsMain from "./Analytics/AnalyticsMain";
 import { Provider } from "react-redux";
-
 import { GlobalContext } from "./GlobalProvider";
 import Logins from "./components/auth/Logins";
 import PrivateRoutes from "./components/private-route/PrivateRoutes";
+import Test from "./components/Sheet/Test";
 const App = () => {
-  const {  } =
-    useContext(GlobalContext);
-  
+  const {} = useContext(GlobalContext);
 
   return (
     <>
@@ -30,6 +28,8 @@ const App = () => {
             <Route path="Datasource" element={<Datasource />} />
             <Route path="AnalyticsMain" element={<AnalyticsMain />} />
           </Route>
+          {/* <Route path="/test" element={<Plot />} /> */}
+          <Route path="/test" element={<Test />} />
         </Routes>
       </div>
     </>

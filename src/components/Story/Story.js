@@ -37,6 +37,7 @@ const Story = () => {
   };
   function handleAddContainer() {
     const updatedStory = storys.find((story) => story.name === storyParam);
+    console.log(updatedStory);
     updatedStory.buttonContain.push(updatedStory.buttonContain.length);
     const tempStorys = storys.map((story) =>
       story.name === storyParam ? updatedStory : story

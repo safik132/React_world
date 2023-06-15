@@ -41,19 +41,14 @@ const ImportExcel = (props) => {
     setNumberofColumns,
     numberofRows,
     numberofColumns,
-    categoricalData,
-    categoryDataType,
-    allUnique,
     setallUnique,
-    setCategoryDataType,
-    numericalData,
-    setnumericalData,
-    numericalDataType,
-    setNumericalDataType,
-    dataFormat,
     setDataFormat,
-    dataType,
     setDataType,
+    loading,
+    setLoading,
+    setBufferingModal,
+    fileName,
+    setFileName,
   } = useContext(GlobalContext);
 
   const sheetParam = useParams().sheet;
@@ -62,10 +57,19 @@ const ImportExcel = (props) => {
   const acceptableFileName = ["xlsx", "xls", "csv", "owbx"];
 
   const isFileSupported = (name) => {
-    return acceptableFileName.includes(name.split(".").pop().toLowerCase());
+    return acceptableFileName.includes(
+      name
+        .split(".")
+        .pop()
+        .toLowerCase()
+    );
   };
 
-  const getFileName = (file) => file.name.split(".").slice(0, -1).join(".");
+  const getFileName = (file) =>
+    file.name
+      .split(".")
+      .slice(0, -1)
+      .join(".");
   const processData = (wsname, dataString) => {
     const dataStringLines = dataString.split(/\r\n|\n/);
     const keys = dataStringLines[0].split(",");
@@ -89,6 +93,7 @@ const ImportExcel = (props) => {
     let eachSheet = {};
     eachSheet[wsname] = { ...obj };
     setDataFormat(obj);
+    setLoading(false);
     return obj;
   };
   const readDataFromExcel = (data) => {
@@ -141,6 +146,8 @@ const ImportExcel = (props) => {
   };
 
   const processAgainFile = (jsondata, worksheet) => {
+    setBufferingModal(true);
+    setLoading(true);
     let sheet = jsondata.sheetParam;
     let dashboard = jsondata.dashboardParam;
     if (sheet) {
@@ -177,15 +184,17 @@ const ImportExcel = (props) => {
       )
       .then((res) => {
         // console.log('File uploaded successfully:', res.data);
-        console.log(file);
+        console.log(res);
       })
       .catch((err) => {
         console.error("Error uploading file:", err);
-        console.log(file);
       });
   };
   const handleUploadFile = async (e) => {
     const myFile = e.target.files[0];
+    setFileName(myFile.name);
+    setLoading(true);
+    setBufferingModal(true);
     var idx = myFile.name.lastIndexOf(".");
     var filetype = idx < 1 ? "" : myFile.name.substr(idx + 1);
     sendFileToBackend(myFile);
@@ -222,7 +231,6 @@ const ImportExcel = (props) => {
             }
           : sheet
       );
-
       for (const key in realData) {
         let unique = realData?.[key].filter(
           (item, i, ar) => ar.indexOf(item) === i
@@ -246,7 +254,6 @@ const ImportExcel = (props) => {
           setDataType(CdataType);
         }
       }
-
       setSheets(tempSheets);
       setSelectedWB(mySheetData);
       setSelectedWBSheet(Object.keys(mySheetData)[0]);

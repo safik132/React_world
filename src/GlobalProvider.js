@@ -1,6 +1,6 @@
 import React, { createContext, useState } from "react";
 const initialSheets = [
-  { name: "sheet", workbooks: [], rows: [{}], realData: [] },
+  { name: "sheet", workbooks: [], rows: [], cols: [], realData: [], Plot: [] },
 ];
 const initialDashboards = [{ name: "dashboard", graphs: [0, 1, 2, 3, 4, 5] }];
 const initialStorys = [{ name: "story", buttonContain: [] }];
@@ -55,10 +55,21 @@ export const GlobalProvider = ({ children }) => {
   const [Upassword, setUpassword] = useState();
   const [matchedUser, setMatchUser] = useState();
   const [authenticated, setAuthenticated] = useState(null);
-
+  const [rowLength, setRowLength] = useState();
+  const [loading, setLoading] = useState(false);
+  const [bufferingModal, setBufferingModal] = useState();
+  const [fileName, setFileName] = useState();
   return (
     <GlobalContext.Provider
       value={{
+        fileName,
+        setFileName,
+        bufferingModal,
+        setBufferingModal,
+        loading,
+        setLoading,
+        rowLength,
+        setRowLength,
         authenticated,
         setAuthenticated,
         error,

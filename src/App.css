@@ -430,6 +430,26 @@ tr {
   font-size: 18px;
   margin-top: 8px;
 }
+.bufferingModalStyle {
+  background-color: #ffffff;
+  width: 380px;
+  height: 180px;
+  position: relative;
+  top: 50%;
+  left: 50%;
+  right: auto;
+  bottom: auto;
+  margin-right: 50%;
+  transform: translate(-50%, -50%);
+  border: 1px solid black;
+  border-radius: 10px;
+  padding: 10px;
+}
+.loader {
+  display: none;
+  color: #202020;
+  width: 1000px;
+}
 .modalStyle {
   background-color: #ffffff;
   width: 580px;
@@ -508,7 +528,10 @@ tr {
 .contextMenuBox {
   background-color: #d9e1ea;
 }
-
+#plot.layout.width {
+  height: 10px;
+  display: none;
+}
 /* Story*/
 .storyPage {
   height: 88vh;
