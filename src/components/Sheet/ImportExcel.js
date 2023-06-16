@@ -174,7 +174,7 @@ const ImportExcel = (props) => {
 
     axios
       .post(
-        "https://python-api-productionserver.onrender.com/api/uploadfile",
+        "http://3.80.156.57:8000/api/uploadfile",
         formData,
         {
           headers: {

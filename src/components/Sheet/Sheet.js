@@ -164,7 +164,7 @@ const Sheet = () => {
   const fetchTableData = () => {
     if (selectedSheet?.graph === "Crosstab") {
       axios
-        .post("https://python-api-productionserver.onrender.com/api/table", {
+        .post("http://3.80.156.57:8000/api/table", {
           col: selectedSheet?.col?.key,
           row: selectedSheet?.row?.key,
           text: selectedSheet?.text?.key,
@@ -216,7 +216,7 @@ const Sheet = () => {
       setSortedData({ x: [], y: [] });
     } else {
       axios
-        .post("https://python-api-productionserver.onrender.com/api/sort", {
+        .post("http://3.80.156.57:8000/api/sort", {
           action: e.target.value,
           col: selectedSheet?.col?.key,
           row: selectedSheet?.row?.key,

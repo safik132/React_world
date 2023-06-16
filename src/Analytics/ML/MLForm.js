@@ -56,7 +56,7 @@ const MLForm = () => {
     // postFormData(newData);
     axios
       .post(
-        "https://python-api-productionserver.onrender.com/ml/data/",
+        "http://3.80.156.57:8000/ml/data/",
         newData
       )
       // .post("http://localhost:8000/ml/data/", newData)

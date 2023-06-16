@@ -11,7 +11,7 @@ export const registerUser = (userData, history) => {
   axios
     // .post("http://localhost:5001/api/users/register", userData)
     .post(
-      "https://ocean-user-serverbackend.onrender.com/api/users/login",
+      "http://18.206.247.176:5001/api/users/register",
       userData
     )
     .then((res) => alert("Registered Successfull pls Login"))

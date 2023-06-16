@@ -18,7 +18,7 @@ const Home = () => {
     <>
       <div className="home-page">
         <div className="leftSide">
-          <h1 className="h1">Project Ocean </h1>
+          <h1 className="h1">Project Oceans </h1>
           {/* <a href="https://www.aces-co.com/" rel="noreferrer" target="_blank">
             <img
               className="logo"
